@@ -35,6 +35,7 @@ parameters <- list(
 
 num_requests <- ceiling(num_results / 20)  # 20 is the default limit per request
 
+# Make Google Places API calls
 for (i in 1:num_requests) {
   response <- GET(url = endpoint, query = parameters)
   
@@ -74,6 +75,8 @@ for (i in 1:num_requests) {
 write.csv(food_trucks, "food_trucks_data.csv", row.names = FALSE)
 
 
+
+# Map out the 20 food trucks
 food_trucks_map <- leaflet(data = food_trucks) %>%
   addTiles() %>%
   addMarkers(lng = ~Longitude, lat = ~Latitude, popup = ~Name)
@@ -81,6 +84,8 @@ food_trucks_map <- leaflet(data = food_trucks) %>%
 food_trucks_map  # Display the map
 
 
+
+# Reorder the food trucks by rating
 food_trucks <- food_trucks[order(food_trucks$Rating, decreasing = TRUE), ]
 
 breakfast_data <- food_trucks[1:6, ]
@@ -92,6 +97,8 @@ top_food_trucks <- rbind(breakfast_data, lunch_data, dinner_data)
 print(top_food_trucks)
 
 
+
+# Take the top 6
 top_6_food_trucks <- head(top_food_trucks, 6)
 
 top_6_food_trucks_map <- leaflet(data = top_6_food_trucks) %>%
